@@ -1,0 +1,33 @@
+{
+  "name": "forum",
+  "version": "0.0.1",
+  "description": "A basic webforum",
+  "main": "server.js",
+  "scripts": {
+    "test": "nodemon -e *.ejs,*.js,*.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DylanColton/WebForum.git"
+  },
+  "keywords": [
+    "webforum",
+    "forum"
+  ],
+  "author": "Dylan Colton",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DylanColton/WebForum/issues"
+  },
+  "homepage": "https://github.com/DylanColton/WebForum#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "method-override": "^3.0.0",
+    "pg": "^8.13.2"
+  }
+}
