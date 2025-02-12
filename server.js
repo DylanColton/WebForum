@@ -9,7 +9,13 @@ require("dotenv").config();
 const PORT = (parseInt(process.env.TEST) ? process.env.TEST_PORT : process.env.PORT);
 
 let app = express();
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true }));
 
+process.on("SIGINT", () => {
+	console.log("Closing server. Cleaning resources...");
+	process.exit(0);
+});
 app.listen(PORT, '0.0.0.0', () => {
 	console.log(`Listening on 0.0.0.0:${PORT}`);
 });
