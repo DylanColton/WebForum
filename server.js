@@ -6,11 +6,17 @@ const ejs				= require("ejs");
 
 require("dotenv").config();
 
+const { authenticate }	= require("./middleware/auth");
+
 const PORT = (parseInt(process.env.TEST) ? process.env.TEST_PORT : process.env.PORT);
 
 let app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get("/", (req, res) => {
+	res.status(200).send("Hello");
+});
 
 process.on("SIGINT", () => {
 	console.log("Closing server. Cleaning resources...");
