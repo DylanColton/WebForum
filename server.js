@@ -6,16 +6,42 @@ const ejs				= require("ejs");
 
 require("dotenv").config();
 
-const { authenticate }	= require("./middleware/auth");
+const userRoutes		= require("./routes/user");
 
 const PORT = (parseInt(process.env.TEST) ? process.env.TEST_PORT : process.env.PORT);
 
+const page = {
+	charset		: process.env.CHARSET,
+	lang		: process.env.LANG,
+	title		: process.env.TITLE,
+	author		: process.env.AUTHOR,
+	desc		: process.env.DESC,
+	struct		: process.env.STRUCT,
+	style_loc	: process.env.STYLE_LOC,
+	style		: process.env.STYLE
+};
+
 let app = express();
+app.set("view engine", "ejs");
+app.set("views", "views/");
+app.use(express.static(__dirname + "/public"));
 app.use(cors());
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use("/handle/user", userRoutes);
 
 app.get("/", (req, res) => {
-	res.status(200).send("Hello");
+	try {
+		let status = 200;
+		res.status(status).render("index.ejs", Object.assign({}, page, {}));
+	} catch (err) {
+		let status = 500;
+		console.error(err);
+		res.status(status).render("error.ejs", Object.assign({}, page, {
+			status	: status,
+			title	: "Error "
+		}));
+	}
 });
 
 process.on("SIGINT", () => {
