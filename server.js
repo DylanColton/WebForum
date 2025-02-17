@@ -28,7 +28,7 @@ app.use(express.static(__dirname + "/public"));
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use("/handle/user", userRoutes);
+app.use("/user", userRoutes);
 
 app.get("/", (req, res) => {
 	try {
