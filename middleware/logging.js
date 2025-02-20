@@ -3,55 +3,54 @@ const fs	= require("fs");
 
 require("dotenv").config();
 
-const accessSite = (uri, status, err) => {
+const accessSite = async (status, uri, user, err) => {
+	const timestamp = new Date().toISOString();
 	if (err) {
-		fs.append(
+		await fs.append(
 			__dirname+'/logs/error.log',
-			`Timestamp,Status,URI,User,Error`,
+			`${timestamp},${status},${uri},${user},${err}`,
 			(error) => {});
 	}
-	fs.appendFile(
+	await fs.appendFile(
 		__dirname+'/logs/access.log',
-		`Timestamp,Status,URI,User`,
+		`${timestamp},${status},${uri},${user}`,
 		(error) => {});
 };
 
-function rotateFiles(logFile, maxFiles) {
+async function rotateFiles(logFile, maxFiles) {
 	for (let i = maxFiles - 1; i >= 0; i--) {
 		const currentFile = i === 0 ? logFile : `${logFile}.${i}`;
 		const nextFile = `${logFile}.${i+1}`;
 
-		if (fs.existsSync(currentFile)) {
+		if (await fs.existsSync(currentFile)) {
 			if (i + 1 == maxFiles)
-				fs.unlinkSync(nextFile);
-			fs.renameSync(currentFile, nextFile);
+				await fs.unlinkSync(nextFile);
+			await fs.renameSync(currentFile, nextFile);
 		}
 	}
 }
 
-const rollover = () => {
+const rollover = async () => {
 	const logDir = path.join(__dirname, "../logs");
 
-	if (!fs.existsSync(logDir))
+	if (!(await fs.existsSync(logDir)))
 		fs.mkdirSync(logDir, { recursive: true });
 
 	const errLog = path.join(logDir, 'error.log');
 	const accLog = path.join(logDir, 'access.log');
 
-	rotateFiles(errLog, parseInt(process.env.MAX_ERRORS));
-	fs.writeFile(
+	await rotateFiles(errLog, parseInt(process.env.MAX_ERRORS));
+	await fs.writeFile(
 		errLog,
 		'Timestamp,Status,URI,User,Error',
 		(error) => {});
 
-	rotateFiles(accLog, parseInt(process.env.MAX_ACCESS));
-	fs.writeFile(
+	await rotateFiles(accLog, parseInt(process.env.MAX_ACCESS));
+	await fs.writeFile(
 		accLog,
 		'Timestamp,Status,URI,User',
 		(error) => {});
 };
-
-rollover();
 
 module.exports = {
 	accessSite,

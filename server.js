@@ -1,4 +1,5 @@
 const methodOverride	= require("method-override");
+const cookieParser		= require("cookie-parser");
 const bodyParser		= require("body-parser");
 const express			= require("express");
 const cors				= require("cors");
@@ -7,6 +8,8 @@ const ejs				= require("ejs");
 require("dotenv").config();
 
 const userRoutes		= require("./routes/user");
+const { cookie }		= require("./middleware/cookie");
+const { accessSite }	= require("./middleware/logging");
 
 const PORT = (parseInt(process.env.TEST) ? process.env.TEST_PORT : process.env.PORT);
 
@@ -18,7 +21,9 @@ const page = {
 	desc		: process.env.DESC,
 	struct		: process.env.STRUCT,
 	style_loc	: process.env.STYLE_LOC,
-	style		: process.env.STYLE
+	style		: process.env.STYLE,
+	favicon_loc	: process.env.FAVICON_LOC,
+	favicon		: process.env.FAVICON
 };
 
 let app = express();
@@ -28,15 +33,19 @@ app.use(express.static(__dirname + "/public"));
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(cookie);
 app.use("/user", userRoutes);
 
-app.get("/", (req, res) => {
+
+app.get("/", async (req, res) => {
 	try {
 		let status = 200;
+		accessSite(200, "/", req.cookies.user_id);
 		res.status(status).render("index.ejs", Object.assign({}, page, {}));
 	} catch (err) {
 		let status = 500;
-		console.error(err);
+		accessSite(200, "/", req.cookies.user_id, err);
 		res.status(status).render("error.ejs", Object.assign({}, page, {
 			status	: status,
 			title	: "Error "

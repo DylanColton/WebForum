@@ -1,3 +1,19 @@
 body {
-	background	: #000000;
+	background	: #FFFFFF;
+}
+
+#header {
+	background	: #770000;
+}
+
+#navi {
+	background	: #007700;
+}
+
+#footer {
+	background	: #000077;
+}
+
+#content-wrap {
+	background	: #7700CC;
 }

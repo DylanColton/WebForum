@@ -1,35 +1,39 @@
 const pool	= require("pool");
 
-const getPosts = async (where, value) => {
+const getPostsByThread	= async (thread_id) => {
 	try {
-		// where is what we are getting for, i.e. A user or a thread
-		if (!where)
-			throw new Error("No 'where' stated. Cannot retrieve data from nothing");
-		// value is the user id or thread id
-		if (!value)
-			throw new Error("No 'value' stated. Cannot retrieve all data from posts.");
 		const query = `
-			SELECT * FROM posts WHERE $1=$2 ORDER BY id DESC;
+		SELECT *
+		FROM posts
+		WHERE thread_id=$1;
 		`;
-		const result = pool.query(query, [where, value]);
-		if (result.rows.length == 0)
-			throw new Error("No posts returned");
+
+		const result = pool.query(query, [thread_id]);
+		if (result.rows.length === 0) throw new Error("Nothing returned by query");
+
+		return result.rows;
 	} catch (err) {
-		console.error(`Error: ${err}`);
+		return err;
 	}
 };
 
-const makePost = async(thread, post_message) => {
+const getPostsByUser	= async (user_id) => {
 	try {
 		const query = `
-			INSERT INTO posts (poster, thread, board, posted_on)
-			VALUES ($1, $2, $3, $4);
+		SELECT *
+		FROM posts
+		WHERE user_id=$1;
 		`;
+		const result = pool.query(query, [user_id]);
+		if (result.rows.length === 0) throw new Error("Nothing returned by query");
+
+		return result.rows;
 	} catch (err) {
-		console.error(`Error: ${err}`);
+		return err;
 	}
 };
 
 module.exports = {
-	getPosts
+	getPostsByThread,
+	getPostsByUser
 };

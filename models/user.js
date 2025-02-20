@@ -17,13 +17,13 @@ const createUser	= async (username, password, email) => {
 		VALUES ($1, $2, $3)
 		RETURNING *;
 		`;
-		const result = pool.query(query, [username, hashedPw, email]);
+		const result = await pool.query(query, [username, hashedPw, email]);
 
 		if (result.rows.length === 0) throw new Error("No entry made");
 
 		return result.rows[0];
 	} catch (err) {
-		return err;
+		throw new Error(`Database error: ${err.message}`);
 	}
 };
 
@@ -38,13 +38,13 @@ const setTagLine	= async (user_id, tagline) => {
 		WHERE user_id=$2
 		RETURNING *;
 		`;
-		const result = pool.query(query, [tagline, user_id]);
+		const result = await pool.query(query, [tagline, user_id]);
 
 		if (result.rows.length === 0) throw new Error("No change was made");
 
 		return result.rows[0];
 	} catch (err) {
-		return err;
+		throw new Error(`Database error: ${err.message}`);
 	}
 };
 
@@ -59,13 +59,13 @@ const setSignature	= async (user_id, signature) => {
 		WHERE user_id=$2
 		RETURNING *;
 		`;
-		const result = pool.query(query, [signature, user_id]);
+		const result = await pool.query(query, [signature, user_id]);
 
 		if (result.rows.length === 0) throw new Error("No change was made");
 
 		return result.rows[0];
 	} catch (err) {
-		return err;
+		throw new Error(`Database error: ${err.message}`);
 	}
 };
 
@@ -80,13 +80,13 @@ const setAvatar		= async (user_id, avatar) => {
 		WHERE user_id=$2
 		RETURNING *;
 		`;
-		const result = pool.query(query, [avatar, user_id]);
+		const result = await pool.query(query, [avatar, user_id]);
 
 		if (result.rows.length === 0) throw new Error("No change was made");
 
 		return result.rows[0];
 	} catch (err) {
-		return err;
+		throw new Error(`Database error: ${err.message}`);
 	}
 };
 
@@ -100,13 +100,20 @@ const getUserByName	= async (user_id) => {
 		FROM users
 		WHERE user_id=$1;
 		`;
-
-		const result = pool.query(query, [user_id]);
+		const result = await pool.query(query, [user_id]);
 
 		if (result.rows.length === 0) throw new Error("No change was made");
 
 		return result.rows;
 	} catch (err) {
-		return err;
+		throw new Error(`Database error: ${err.message}`);
 	}
+};
+
+module.exports = {
+	createUser,
+	setTagLine,
+	setSignature,
+	setAvatar,
+	getUserByName
 };
