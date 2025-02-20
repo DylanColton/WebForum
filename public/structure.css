@@ -53,3 +53,14 @@ body {
 	padding		: 5px;
 	margin		: 10px 25px;
 }
+
+form {
+	width	: auto;
+	height	: auto;
+	margin	: 10px;
+}
+input {
+	width	: auto;
+	height	: auto;
+	margin	: 2px;
+}

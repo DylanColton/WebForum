@@ -17,9 +17,9 @@ const signup		= async (req, res) => {
 	const { user, pswd, email } = req.body;
 
 	try {
-		const res = await User.createUser(user, pswd, email);
+		const result = await User.createUser(user, pswd, email);
 		accessSite(201, req.url, req.cookies.user_id);
-		res.status(201).send("User created")
+		res.status(201).send(`User created:\n${result}`);
 	} catch (err) {
 		accessSite(500, req.url, req.cookies.user_id, err.message);
 		res.status(500).send("Error 500");
