@@ -11,6 +11,8 @@ setTagLine;
 setSignature;
 setAvatar;
 getUserByName;
+getUserByNameAndPass;
+getUserByEmailAndPass;
 */
 
 const signup		= async (req, res) => {
@@ -27,6 +29,24 @@ const signup		= async (req, res) => {
 };
 
 const login			= async (req, res) => {
+	const { user, pswd, email } = req.body;
+
+	try {
+		if (!(user || email)) throw new Error("Username or email required for login");
+		if (!pswd) throw new Error("Password is required for login");
+
+		if (!user) {
+			const result = await User.getUserByNameAndPass(user, pswd);
+			if (result.rows.length === 0) throw new Error("No user exists");
+			res.status(200).send(`User created:\n${result}`);
+		} else {
+			const result = await User.getUserByEmailAndPass(email, pswd);
+			if (result.rows.length === 0) throw new Error("No user exists");
+			res.status(200).send(`User created:\n${result}`);
+		}
+	} catch (err) {
+		res.status(500).send({ error: err });
+	}
 };
 
 const logout		= async (req, res) => {
