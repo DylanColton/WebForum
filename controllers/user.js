@@ -38,13 +38,16 @@ const login			= async (req, res) => {
 		if (!user) {
 			const result = await User.getUserByNameAndPass(user, pswd);
 			if (result.rows.length === 0) throw new Error("No user exists");
+			accessSite(200, req.url, req.cookies.user_id);
 			res.status(200).send(`User created:\n${result}`);
 		} else {
 			const result = await User.getUserByEmailAndPass(email, pswd);
 			if (result.rows.length === 0) throw new Error("No user exists");
+			accessSite(200, req.url, req.cookies.user_id);
 			res.status(200).send(`User created:\n${result}`);
 		}
 	} catch (err) {
+		accessSite(500, req.url, req.cookies.user_id, err.message);
 		res.status(500).send({ error: err });
 	}
 };
