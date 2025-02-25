@@ -53,6 +53,14 @@ const login			= async (req, res) => {
 };
 
 const logout		= async (req, res) => {
+	const { user, pswd, email } = req.body;
+
+	try {
+		res.status(200).send("Logged out");
+	} catch (err) {
+		accessSite(500, req.url, req.cookies.user_id, err.message);
+		res.status(500).send({ error: err });
+	}
 };
 
 const assignGuest	= async (req, res) => {
