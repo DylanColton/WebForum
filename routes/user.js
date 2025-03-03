@@ -10,4 +10,10 @@ const {
 
 router.post("/signup", signup);
 
+router.post("/login", login);
+
+router.post("/logout", logout);
+
+router.post("/assignGuest", assignGuest);
+
 module.exports = router;

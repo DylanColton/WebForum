@@ -8,12 +8,14 @@ const cookie = (req, res, next) => {
 		res.cookie("user_id", guestId, {
 			maxAge		: 1000 * 60 * 60 * 24 * 28,
 			httpOnly	: true,
+			secure		: false,
 			sameSite	: "Strict"
 		});
 		req.user_id = guestId;
 	} else {
 		req.user_id = req.cookies.user_id;
 	}
+
 	next();
 };
 
