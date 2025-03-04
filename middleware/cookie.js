@@ -19,6 +19,21 @@ const cookie = (req, res, next) => {
 	next();
 };
 
+const giveUserCookie = (response) => {
+	response.cookie("isUser", true, {
+		maxAge		: 1000 * 60 * 60 * 24 * 28,
+		httpOnly	: true,
+		secure		: false,
+		sameSite	: "Strict"
+	});
+};
+
+const removeUserCookie = (response) => {
+	response.clearCookie("isUser");
+};
+
 module.exports = {
-	cookie
+	cookie,
+	giveUserCookie,
+	removeUserCookie
 };
