@@ -1,8 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang=<%= lang %>>
 	<head>
+		<%- include("partials/static/head.ejs"); %>
 	</head>
 
 	<body>
+		<%- include("partials/static/naviheader.ejs"); %>
+		<div id=content-wrap>
+			<%- include("partials/static/content.ejs"); %>
+		</div>
+		<%- include("partials/static/footer.ejs"); %>
 	</body>
 </html>
